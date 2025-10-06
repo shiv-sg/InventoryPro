@@ -12,17 +12,47 @@ purchase_id_counter = 1
 sale_id_counter = 1
 
 
-# Product CRUD
-def create_product(product: schemas.ProductBase) -> schemas.Product:
+# ----------------------
+# PRODUCT CRUD
+# ----------------------
+def create_product(product: schemas.ProductCreate):
     global product_id_counter
     new_product = schemas.Product(id=product_id_counter, **product.dict())
     products_db.append(new_product)
     product_id_counter += 1
     return new_product
 
-
-def get_products() -> List[schemas.Product]:
+def get_products():
     return products_db
+
+def update_product(product_id: int, product_update: schemas.ProductUpdate):
+    for index, product in enumerate(products_db):
+        if product.id == product_id:
+            updated_data = product.dict()
+            update_fields = product_update.dict(exclude_unset=True)
+            updated_data.update(update_fields)
+            products_db[index] = schemas.Product(**updated_data)
+            return products_db[index]
+    return None
+
+def delete_product(product_id: int):
+    for index, product in enumerate(products_db):
+        if product.id == product_id:
+            return products_db.pop(index)
+    return None
+
+
+# # Product CRUD
+# def create_product(product: schemas.ProductBase) -> schemas.Product:
+#     global product_id_counter
+#     new_product = schemas.Product(id=product_id_counter, **product.dict())
+#     products_db.append(new_product)
+#     product_id_counter += 1
+#     return new_product
+
+
+# def get_products() -> List[schemas.Product]:
+#     return products_db
 
 
 # ----------------------

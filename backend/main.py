@@ -30,6 +30,40 @@ def status():
 def health_check():
     return {"status": "OK", "message": "API is healthy"}
 
+
+# ----------------------
+# PRODUCT CRUD
+# ----------------------
+# create product
+@app.post("/products", response_model=schemas.Product)
+def create_product(product: schemas.ProductCreate):
+    global product_id_counter
+    new_product = schemas.Product(id=product_id_counter, **product.dict())
+    products_db.append(new_product)
+    product_id_counter += 1
+    return new_product
+
+# list products
+@app.get("/products", response_model=list[schemas.Product])
+def list_products():
+    return crud.get_products()
+
+# update product
+@app.put("/products/{product_id}", response_model=schemas.Product)
+def update_product(product_id: int, product_update: schemas.ProductUpdate):
+    updated = crud.update_product(product_id, product_update)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return updated
+
+# delete product
+@app.delete("/products/{product_id}")
+def delete_product(product_id: int):
+    deleted = crud.delete_product(product_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return {"message": "Product deleted successfully"}
+
 # ----------------------
 # PURCHASE ROUTES
 # ----------------------
@@ -38,10 +72,10 @@ def health_check():
 def create_purchase(purchase: schemas.PurchaseCreate):
     return crud.create_purchase(purchase)
 
-# List products
-@app.get("/products", response_model=List[schemas.Product])
-def list_products():
-    return crud.get_products()
+# list purchases
+@app.get("/purchases", response_model=List[schemas.Purchase])
+def list_purchases():
+    return crud.get_purchases()
 
 # update purchase
 @app.put("/purchases/{purchase_id}", response_model=schemas.Purchase)
