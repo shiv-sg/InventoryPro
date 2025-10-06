@@ -4,8 +4,8 @@ from backend import schemas
 
 # In-memory databases
 products_db: List[schemas.Product] = []
-purchases_db: List[Purchase] = []
-sales_db: List[Sale] = []
+purchases_db: List[schemas.Purchase] = []
+sales_db: List[schemas.Sale] = []
 
 product_id_counter = 1
 purchase_id_counter = 1

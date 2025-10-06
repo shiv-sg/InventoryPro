@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-import crud
-from schemas import Product, ProductBase, Purchase, PurchaseBase, Sale, SaleBase
+from backend import crud
+from backend import schemas #import Product, ProductBase, Purchase, PurchaseBase, Sale, SaleBase
 from typing import List
 
 # Initialize FastAPI app
@@ -39,7 +39,7 @@ def create_purchase(purchase: schemas.PurchaseCreate):
     return crud.create_purchase(purchase)
 
 # List products
-@app.get("/products", response_model=List[Product])
+@app.get("/products", response_model=List[schemas.Product])
 def list_products():
     return crud.get_products()
 
@@ -68,7 +68,7 @@ def create_sale(sale: schemas.SaleCreate):
     return crud.create_sale(sale)
 
 # List sales
-@app.get("/sales", response_model=List[Sale])
+@app.get("/sales", response_model=List[schemas.Sale])
 def list_sales():
     return crud.get_sales()
 
